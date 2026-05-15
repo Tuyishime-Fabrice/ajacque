@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Ajacque Funeral Services</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+
+    <div class="login-logo">
+      <svg class="login-logo-mark" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="52" height="52" fill="#1e2620"/>
+        <path d="M26 8 L26 44" stroke="#c8a96e" stroke-width="1.2"/>
+        <path d="M10 26 L42 26" stroke="#c8a96e" stroke-width="1.2"/>
+        <rect x="19" y="19" width="14" height="14" stroke="#c8a96e" stroke-width="1" fill="none"/>
+        <circle cx="26" cy="26" r="3.5" fill="#c8a96e"/>
+      </svg>
+      <div class="login-logo-text">
+        <span class="n1">Ajacque</span>
+        <span class="n2">Funeral Services</span>
+      </div>
+    </div>
+
+    <h2 class="login-title">Admin Portal</h2>
+    <p class="login-sub">Sign in to manage your catalogue</p>
+
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Enter username" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Enter password" autocomplete="off">
+    </div>
+
+    <span class="login-err" id="login-err"></span>
+
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+
+    <p class="login-kicker">Ajacque Funeral Services · Kigali, Rwanda</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════ -->
+<div id="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-head">
+      <div class="sidebar-brand">
+        <svg class="sidebar-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" fill="#2a3530"/>
+          <path d="M20 6 L20 34" stroke="#c8a96e" stroke-width="1"/>
+          <path d="M7 20 L33 20" stroke="#c8a96e" stroke-width="1"/>
+          <rect x="14" y="14" width="12" height="12" stroke="#c8a96e" stroke-width=".8" fill="none"/>
+          <circle cx="20" cy="20" r="2.5" fill="#c8a96e"/>
+        </svg>
+        <div class="sidebar-brand-text">
+          <span class="bn1">Ajacque</span>
+          <span class="bn2">Funeral Services</span>
+        </div>
+      </div>
+      <div class="sidebar-admin-badge">
+        <span class="badge-dot"></span>
+        <span class="badge-txt">Admin</span>
+      </div>
+    </div>
+
+    <div class="sidebar-stats">
+      <div class="ss-item">
+        <span class="ss-num" id="sb-prod-count">0</span>
+        <span class="ss-lbl">Products</span>
+      </div>
+      <div class="ss-item">
+        <span class="ss-num" id="sb-msg-count">0</span>
+        <span class="ss-lbl">Messages</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="sidebar-nav-label">Management</span>
+
+      <button class="nav-item active" onclick="showPanel('overview',this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span class="nav-label">Overview</span>
+      </button>
+
+      <button class="nav-item" onclick="showPanel('add-product',this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span class="nav-label">Add Product</span>
+      </button>
+
+      <button class="nav-item" onclick="showPanel('all-products',this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="8" height="8" rx="1"/>
+          <rect x="13" y="3" width="8" height="8" rx="1"/>
+          <rect x="3" y="13" width="8" height="8" rx="1"/>
+          <rect x="13" y="13" width="8" height="8" rx="1"/>
+        </svg>
+        <span class="nav-label">All Products</span>
+      </button>
+
+      <button class="nav-item" onclick="showPanel('messages',this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span class="nav-label">Messages</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <button class="sidebar-foot-btn" onclick="window.open('index.html','_blank')">
+        <svg class="foot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        View Website
+      </button>
+      <button class="sidebar-foot-btn danger" onclick="confirmLogout()">
+        <svg class="foot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <span class="topbar-title" id="topbar-title">Overview</span>
+      <div class="topbar-right">
+        <span class="topbar-time" id="topbar-time"></span>
+        <!-- Mobile sidebar toggle (hidden on desktop) -->
+        <button class="sidebar-foot-btn mob-toggle" style="display:none;border:none;background:none;padding:4px;" onclick="document.getElementById('sidebar').classList.toggle('open')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e2620" stroke-width="1.8">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── PANEL: OVERVIEW ── -->
+    <div class="panel active" id="panel-overview">
+      <div class="overview-stats">
+        <div class="ov-stat gold">
+          <span class="ov-num" id="ov-prod">0</span>
+          <span class="ov-lbl">Total Products</span>
+        </div>
+        <div class="ov-stat sage">
+          <span class="ov-num" id="ov-msg">0</span>
+          <span class="ov-lbl">Enquiries Received</span>
+        </div>
+        <div class="ov-stat ink">
+          <span class="ov-num">24/7</span>
+          <span class="ov-lbl">Emergency Support</span>
+        </div>
+      </div>
+
+      <div class="overview-actions">
+        <h2>Quick Actions</h2>
+        <div class="quick-actions">
+          <button class="qa-btn primary" onclick="showPanel('add-product', document.querySelectorAll('.nav-item')[1])">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add New Product
+          </button>
+          <button class="qa-btn" onclick="showPanel('all-products', document.querySelectorAll('.nav-item')[2])">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+            View Catalogue
+          </button>
+          <button class="qa-btn" onclick="showPanel('messages', document.querySelectorAll('.nav-item')[3])">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Read Messages
+          </button>
+          <button class="qa-btn" onclick="window.open('index.html','_blank')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View Website
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL: ADD PRODUCT ── -->
+    <div class="panel" id="panel-add-product">
+      <div class="panel-header">
+        <h2>Add New Product</h2>
+        <p>Fill in the details below to add a coffin or casket to your catalogue.</p>
+      </div>
+
+      <div class="product-form" id="product-form">
+
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="pf-name" placeholder="e.g. Serenity Oak Casket">
+        </div>
+
+        <div class="form-group">
+          <label>Price (RWF) *</label>
+          <input type="text" id="pf-price" placeholder="e.g. 450,000 RWF">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="pf-category">
+            <option value="">Select category</option>
+            <option value="Wooden Coffins">Wooden Coffins</option>
+            <option value="Metal Caskets">Metal Caskets</option>
+            <option value="Premium Collection">Premium Collection</option>
+            <option value="Standard Collection">Standard Collection</option>
+            <option value="Children's Collection">Children's Collection</option>
+            <option value="Eco Friendly">Eco Friendly</option>
+            <option value="Custom Orders">Custom Orders</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Material</label>
+          <input type="text" id="pf-material" placeholder="e.g. Solid Oak, Mahogany, Steel">
+        </div>
+
+        <div class="form-group">
+          <label>WhatsApp Number</label>
+          <input type="text" id="pf-whatsapp" placeholder="+250 788 871 345">
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="pf-phone" placeholder="+250 788 871 345">
+        </div>
+
+        <div class="form-group full-row">
+          <label>Description *</label>
+          <textarea id="pf-desc" placeholder="Describe the product — materials, dimensions, finish, interior lining, handles..."></textarea>
+        </div>
+
+        <!-- IMAGE UPLOADER -->
+        <div class="img-upload-section">
+          <label>Product Images (up to 3)</label>
+          <div class="img-slots">
+
+            <div class="img-slot" id="slot-0" ondragover="handleDragOver(event,0)" ondragleave="handleDragLeave(event,0)" ondrop="handleDrop(event,0)">
+              <input type="file" accept="image/*" onchange="handleFileSelect(event,0)">
+              <div class="img-slot-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Primary Image</span>
+              </div>
+              <div class="img-slot-preview" id="preview-0">
+                <img id="preview-img-0" src="" alt="">
+              </div>
+              <button class="img-remove" id="remove-0" onclick="removeImage(event,0)">✕</button>
+            </div>
+
+            <div class="img-slot" id="slot-1" ondragover="handleDragOver(event,1)" ondragleave="handleDragLeave(event,1)" ondrop="handleDrop(event,1)">
+              <input type="file" accept="image/*" onchange="handleFileSelect(event,1)">
+              <div class="img-slot-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Second Image</span>
+              </div>
+              <div class="img-slot-preview" id="preview-1">
+                <img id="preview-img-1" src="" alt="">
+              </div>
+              <button class="img-remove" id="remove-1" onclick="removeImage(event,1)">✕</button>
+            </div>
+
+            <div class="img-slot" id="slot-2" ondragover="handleDragOver(event,2)" ondragleave="handleDragLeave(event,2)" ondrop="handleDrop(event,2)">
+              <input type="file" accept="image/*" onchange="handleFileSelect(event,2)">
+              <div class="img-slot-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Third Image</span>
+              </div>
+              <div class="img-slot-preview" id="preview-2">
+                <img id="preview-img-2" src="" alt="">
+              </div>
+              <button class="img-remove" id="remove-2" onclick="removeImage(event,2)">✕</button>
+            </div>
+
+          </div>
+          <span class="img-size-note">Accepts JPG, PNG, WEBP · Max 6 MB per image</span>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-save" onclick="saveProduct()">Save Product</button>
+          <button class="btn-reset" onclick="resetForm()">Reset Form</button>
+        </div>
+
+        <div class="form-success" id="form-success">
+          Product saved successfully and is now live on the website.
+        </div>
+        <div class="form-err-msg" id="form-err"></div>
+
+      </div>
+    </div>
+
+    <!-- ── PANEL: ALL PRODUCTS ── -->
+    <div class="panel" id="panel-all-products">
+      <div class="panel-header">
+        <h2>All Products</h2>
+        <p>Manage your catalogue. Products deleted here are removed from the website immediately.</p>
+      </div>
+
+      <div class="prod-list-controls">
+        <input type="text" id="prod-search" placeholder="Search products..." oninput="renderProductList()">
+        <span class="prod-count-badge" id="prod-list-count">0 products</span>
+      </div>
+
+      <div class="product-list" id="product-list"></div>
+    </div>
+
+    <!-- ── PANEL: MESSAGES ── -->
+    <div class="panel" id="panel-messages">
+      <div class="panel-header">
+        <h2>Enquiries</h2>
+        <p>Messages submitted through the contact form on your website.</p>
+      </div>
+
+      <div class="msg-controls">
+        <span class="msg-count" id="msg-count">0 messages</span>
+        <button class="btn-clear-all" onclick="confirmClearAll()">Clear All</button>
+      </div>
+
+      <div class="msg-list" id="msg-list"></div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /dashboard -->
+
+<!-- ══════════════════════════════════════
+     TOAST
+══════════════════════════════════════ -->
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     CONFIRM DIALOG
+══════════════════════════════════════ -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <h3 id="confirm-title">Are you sure?</h3>
+    <p id="confirm-msg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="conf-yes" id="conf-yes-btn">Confirm</button>
+      <button class="conf-no" onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   SUPABASE CONFIG
+   🔧 Replace these two values with your project details
+════════════════════════════════════════ */
+const SUPABASE_URL  = 'https://fxcwywpapoqbanzyubqo.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4Y3d5d3BhcG9xYmFuenl1YnFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MjgyODUsImV4cCI6MjA5NDQwNDI4NX0.3DooQKXD0epe-B5dSM_1Jm18Gzrd-UgzyGiEUo4lw54';
+const SUPABASE_SVC  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4Y3d5d3BhcG9xYmFuenl1YnFvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODgyODI4NSwiZXhwIjoyMDk0NDA0Mjg1fQ.kKcNkwApAi2dhy2fKzhrNs2PjnGWHQK5vPTvpOC-PN0';
+
+/* ════════════════════════════════════════
+   CONSTANTS
+════════════════════════════════════════ */
+const MESSAGES_KEY = 'ajacque_messages'; // contact messages still in localStorage
+const AUTH_KEY     = 'ajacque_admin_auth';
+const CREDS        = { user:'admin', pass:'ajacque2024' };
+const BUCKET       = 'product-images'; // Supabase Storage bucket name
+
+/* ════════════════════════════════════════
+   SUPABASE HELPERS
+════════════════════════════════════════ */
+async function sbFetch(path, opts = {}, useServiceKey = false) {
+  const key = useServiceKey ? SUPABASE_SVC : SUPABASE_ANON;
+  const res = await fetch(SUPABASE_URL + path, {
+    ...opts,
+    headers: {
+      'apikey':        key,
+      'Authorization': 'Bearer ' + key,
+      'Content-Type':  'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+  return res;
+}
+
+// Upload one image file → returns public URL string or null
+async function uploadImage(file, productName, slot) {
+  const ext  = file.name.split('.').pop();
+  const path = `${Date.now()}_${slot}.${ext}`;
+  const res  = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,
+    {
+      method: 'POST',
+      headers: {
+        'apikey':        SUPABASE_SVC,
+        'Authorization': 'Bearer ' + SUPABASE_SVC,
+        'Content-Type':  file.type,
+        'x-upsert':      'false',
+      },
+      body: file,
+    }
+  );
+  if (!res.ok) {
+    console.error('Image upload failed', await res.text());
+    return null;
+  }
+  // Build public URL
+  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem(AUTH_KEY) === 'true') showDashboard();
+  startClock();
+});
+
+/* ════════════════════════════════════════
+   AUTH
+════════════════════════════════════════ */
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  if (u === CREDS.user && p === CREDS.pass) {
+    sessionStorage.setItem(AUTH_KEY, 'true');
+    err.textContent = '';
+    showDashboard();
+  } else {
+    err.textContent = 'Invalid username or password.';
+    document.getElementById('login-pass').value = '';
+  }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+});
+
+function showDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('visible');
+  updateCounters();
+}
+
+function confirmLogout() {
+  openConfirm('Sign Out', 'Are you sure you want to sign out?', () => {
+    sessionStorage.removeItem(AUTH_KEY);
+    location.reload();
+  });
+}
+
+/* ════════════════════════════════════════
+   PANEL ROUTING
+════════════════════════════════════════ */
+const panelTitles = {
+  'overview':     'Overview',
+  'add-product':  'Add Product',
+  'all-products': 'All Products',
+  'messages':     'Enquiries',
+};
+
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.getElementById('topbar-title').textContent = panelTitles[name] || name;
+  if (name === 'all-products') renderProductList();
+  if (name === 'messages')     renderMessages();
+  if (name === 'overview')     updateCounters();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+/* ════════════════════════════════════════
+   CLOCK
+════════════════════════════════════════ */
+function startClock() {
+  const el = document.getElementById('topbar-time');
+  const tick = () => {
+    el.textContent = new Date().toLocaleString('en-GB',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  };
+  tick(); setInterval(tick, 30000);
+}
+
+/* ════════════════════════════════════════
+   COUNTERS
+════════════════════════════════════════ */
+async function updateCounters() {
+  // Product count from Supabase
+  const res = await sbFetch('/rest/v1/products?select=id', { method:'GET' });
+  let prodCount = 0;
+  if (res.ok) {
+    const rows = await res.json();
+    prodCount = Array.isArray(rows) ? rows.length : 0;
+  }
+  const msgCount = getMessages().length;
+
+  document.getElementById('sb-prod-count').textContent = prodCount;
+  document.getElementById('sb-msg-count').textContent  = msgCount;
+  document.getElementById('ov-prod').textContent = prodCount;
+  document.getElementById('ov-msg').textContent  = msgCount;
+}
+
+/* ════════════════════════════════════════
+   MESSAGES (still localStorage)
+════════════════════════════════════════ */
+function getMessages() {
+  try { return JSON.parse(localStorage.getItem(MESSAGES_KEY)) || []; } catch { return []; }
+}
+function saveMessages(arr) {
+  localStorage.setItem(MESSAGES_KEY, JSON.stringify(arr));
+  updateCounters();
+}
+
+/* ════════════════════════════════════════
+   IMAGE SLOT HANDLING (local preview)
+════════════════════════════════════════ */
+const imageFiles = [null, null, null]; // raw File objects
+
+function handleFileSelect(e, slot) {
+  const file = e.target.files[0];
+  if (file) processFile(file, slot);
+}
+function handleDragOver(e, slot) {
+  e.preventDefault();
+  document.getElementById('slot-'+slot).classList.add('drag-over');
+}
+function handleDragLeave(e, slot) {
+  document.getElementById('slot-'+slot).classList.remove('drag-over');
+}
+function handleDrop(e, slot) {
+  e.preventDefault();
+  document.getElementById('slot-'+slot).classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processFile(file, slot);
+}
+function processFile(file, slot) {
+  if (file.size > 6 * 1024 * 1024) { showToast('Image exceeds 6 MB limit.','error'); return; }
+  imageFiles[slot] = file;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const prev = document.getElementById('preview-' + slot);
+    const img  = document.getElementById('preview-img-' + slot);
+    const rm   = document.getElementById('remove-' + slot);
+    img.src = ev.target.result;
+    prev.classList.add('has-img');
+    rm.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+function removeImage(e, slot) {
+  e.stopPropagation();
+  imageFiles[slot] = null;
+  const prev = document.getElementById('preview-' + slot);
+  const img  = document.getElementById('preview-img-' + slot);
+  const rm   = document.getElementById('remove-' + slot);
+  img.src = ''; prev.classList.remove('has-img'); rm.style.display = 'none';
+  const input = document.querySelector('#slot-' + slot + ' input[type="file"]');
+  if (input) input.value = '';
+}
+
+/* ════════════════════════════════════════
+   SAVE PRODUCT → SUPABASE
+════════════════════════════════════════ */
+async function saveProduct() {
+  const name  = document.getElementById('pf-name').value.trim();
+  const price = document.getElementById('pf-price').value.trim();
+  const desc  = document.getElementById('pf-desc').value.trim();
+  const errEl = document.getElementById('form-err');
+  const okEl  = document.getElementById('form-success');
+  const saveBtn = document.querySelector('.btn-save');
+
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+
+  if (!name)  { showFieldErr(errEl,'Product name is required.'); return; }
+  if (!price) { showFieldErr(errEl,'Price is required.'); return; }
+  if (!desc)  { showFieldErr(errEl,'Description is required.'); return; }
+
+  saveBtn.textContent = 'Uploading images…';
+  saveBtn.disabled = true;
+
+  // Upload images to Supabase Storage
+  const imageUrls = [];
+  for (let i = 0; i < 3; i++) {
+    if (imageFiles[i]) {
+      const url = await uploadImage(imageFiles[i], name, i);
+      if (url) imageUrls.push(url);
+    }
+  }
+
+  saveBtn.textContent = 'Saving product…';
+
+  const product = {
+    name,
+    price,
+    description: desc,
+    category:    document.getElementById('pf-category').value || null,
+    material:    document.getElementById('pf-material').value.trim() || null,
+    whatsapp:    document.getElementById('pf-whatsapp').value.trim() || '+250788871345',
+    phone:       document.getElementById('pf-phone').value.trim() || '+250788871345',
+    images:      imageUrls,  // stored as a JSON array column in Supabase
+  };
+
+  const res = await sbFetch('/rest/v1/products', {
+    method:  'POST',
+    headers: { 'Prefer': 'return=representation' },
+    body:    JSON.stringify(product),
+  });
+
+  saveBtn.textContent = 'Save Product';
+  saveBtn.disabled = false;
+
+  if (!res.ok) {
+    const txt = await res.text();
+    showFieldErr(errEl, 'Save failed: ' + txt);
+    return;
+  }
+
+  okEl.style.display = 'block';
+  showToast('Product saved and live on website!', 'success');
+  updateCounters();
+  resetForm();
+}
+
+function showFieldErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+function resetForm() {
+  ['pf-name','pf-price','pf-desc','pf-material','pf-whatsapp','pf-phone'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('pf-category').selectedIndex = 0;
+  [0,1,2].forEach(i => removeImage({stopPropagation:()=>{}}, i));
+  document.getElementById('form-err').style.display = 'none';
+}
+
+/* ════════════════════════════════════════
+   PRODUCT LIST → SUPABASE
+════════════════════════════════════════ */
+async function renderProductList() {
+  const list    = document.getElementById('product-list');
+  const countEl = document.getElementById('prod-list-count');
+  list.innerHTML = `<div class="pl-empty"><p>Loading…</p></div>`;
+
+  const query   = (document.getElementById('prod-search')?.value || '').toLowerCase();
+  const res     = await sbFetch('/rest/v1/products?select=*&order=created_at.desc');
+  let prods     = res.ok ? await res.json() : [];
+  prods         = Array.isArray(prods) ? prods : [];
+
+  if (query) prods = prods.filter(p =>
+    p.name.toLowerCase().includes(query) || (p.category||'').toLowerCase().includes(query)
+  );
+
+  countEl.textContent = prods.length + (prods.length === 1 ? ' product' : ' products');
+
+  if (!prods.length) {
+    list.innerHTML = `<div class="pl-empty"><p>No products found.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = prods.map(p => {
+    const imgs  = p.images || [];
+    const thumb = imgs[0]
+      ? `<img class="pl-thumb" src="${imgs[0]}" alt="${p.name}">`
+      : `<div class="pl-thumb-empty">⬜</div>`;
+    return `
+      <div class="pl-item">
+        ${thumb}
+        <div>
+          <div class="pl-name">${p.name}</div>
+          <div class="pl-meta">${p.material ? p.material+' · ' : ''}Added ${fmtDate(p.created_at)}</div>
+        </div>
+        <div class="pl-price">${p.price}</div>
+        <div class="pl-cat">${p.category || 'Uncategorised'}</div>
+        <button class="pl-del" onclick="confirmDelete('${p.id}','${p.name.replace(/'/g,"\\'")}')" title="Delete">✕</button>
+      </div>`;
+  }).join('');
+}
+
+async function confirmDelete(id, name) {
+  openConfirm(
+    'Delete Product',
+    `Delete "${name}"? This removes it from the website immediately.`,
+    async () => {
+      const res = await sbFetch(`/rest/v1/products?id=eq.${id}`, { method:'DELETE' });
+      if (res.ok) {
+        showToast('Product deleted.','info');
+        renderProductList();
+        updateCounters();
+      } else {
+        showToast('Delete failed. Try again.','error');
+      }
+    }
+  );
+}
+
+/* ════════════════════════════════════════
+   MESSAGES
+════════════════════════════════════════ */
+function renderMessages() {
+  const msgs  = getMessages();
+  const list  = document.getElementById('msg-list');
+  const count = document.getElementById('msg-count');
+  count.textContent = msgs.length + (msgs.length === 1 ? ' message' : ' messages');
+  if (!msgs.length) {
+    list.innerHTML = `<div class="msg-empty"><p>No messages yet.</p></div>`;
+    return;
+  }
+  list.innerHTML = msgs.map((m, i) => `
+    <div class="msg-item">
+      <div class="msg-header">
+        <div>
+          <div class="msg-name">${esc(m.name||'Anonymous')}</div>
+          <div class="msg-contact">${esc(m.email||'')}${m.phone?' · '+esc(m.phone):''}</div>
+        </div>
+        <span class="msg-time">${fmtDate(m.date||m.createdAt)}</span>
+      </div>
+      ${m.subject ? `<div class="msg-subject">${esc(m.subject)}</div>` : ''}
+      <div class="msg-body">${esc(m.message||'')}</div>
+      <button class="msg-del" onclick="deleteMessage(${i})" title="Delete">✕</button>
+    </div>
+  `).join('');
+}
+
+function deleteMessage(idx) {
+  const msgs = getMessages(); msgs.splice(idx,1); saveMessages(msgs); renderMessages(); showToast('Message deleted.','info');
+}
+function confirmClearAll() {
+  if (!getMessages().length) { showToast('No messages to clear.','info'); return; }
+  openConfirm('Clear All Messages','Delete all enquiries permanently?', () => {
+    saveMessages([]); renderMessages(); showToast('All messages cleared.','info');
+  });
+}
+
+/* ════════════════════════════════════════
+   UTILITIES
+════════════════════════════════════════ */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+  catch { return iso; }
+}
+
+let toastTimer;
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show '+type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className=''; }, 3200);
+}
+
+let confirmCallback = null;
+function openConfirm(title, msg, cb) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent   = msg;
+  confirmCallback = cb;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  confirmCallback = null;
+}
+document.getElementById('conf-yes-btn').addEventListener('click', () => {
+  if (confirmCallback) confirmCallback();
+  closeConfirm();
+});
+document.getElementById('confirm-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('confirm-overlay')) closeConfirm();
+});
+</script>
+</body>
+</html>
