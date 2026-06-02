@@ -242,12 +242,12 @@
 
         <div class="form-group">
           <label>WhatsApp Number</label>
-          <input type="text" id="pf-whatsapp" placeholder="+250 788 871 345">
+          <input type="text" id="pf-whatsapp" value="+250 788 871 345" placeholder="+250 788 871 345">
         </div>
 
         <div class="form-group">
           <label>Phone Number</label>
-          <input type="text" id="pf-phone" placeholder="+250 788 871 345">
+          <input type="text" id="pf-phone" value="+250 788 871 345" placeholder="+250 788 871 345">
         </div>
 
         <div class="form-group full-row">
@@ -642,9 +642,13 @@ async function saveProduct() {
 function showFieldErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
 
 function resetForm() {
-  ['pf-name','pf-price','pf-desc','pf-material','pf-whatsapp','pf-phone'].forEach(id => {
+  const DEFAULT_PHONE = '+250 788 871 345';
+  ['pf-name','pf-price','pf-desc','pf-material'].forEach(id => {
     document.getElementById(id).value = '';
   });
+  // Keep the default contact numbers pre-filled for the next product
+  document.getElementById('pf-whatsapp').value = DEFAULT_PHONE;
+  document.getElementById('pf-phone').value    = DEFAULT_PHONE;
   document.getElementById('pf-category').selectedIndex = 0;
   [0,1,2].forEach(i => removeImage({stopPropagation:()=>{}}, i));
   document.getElementById('form-err').style.display = 'none';

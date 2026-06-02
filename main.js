@@ -38,6 +38,28 @@ async function getProducts() {
 // Keep MSG_KEY for contact messages (still localStorage for now)
 const MSG_KEY = 'ajacque_messages';
 
+// ── Mobile Menu ──────────────────────────────────────────
+function toggleMobileMenu() {
+  const menu   = document.getElementById('mobile-menu');
+  const toggle = document.getElementById('nav-toggle');
+  if (!menu) return;
+  const open = menu.classList.toggle('open');
+  if (toggle) toggle.classList.toggle('active', open);
+}
+
+function closeMobileMenu() {
+  const menu   = document.getElementById('mobile-menu');
+  const toggle = document.getElementById('nav-toggle');
+  if (menu)   menu.classList.remove('open');
+  if (toggle) toggle.classList.remove('active');
+}
+
+// Navigate from the mobile menu, then close it
+function navGo(id) {
+  closeMobileMenu();
+  showPage(id);
+}
+
 // ── Page Router ──────────────────────────────────────────
 async function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -109,7 +131,8 @@ async function renderFeatured() {
     return;
   }
 
-  const featured = products.slice(0, 3);
+  const featured = products;
+  _productCache = products;
   grid.innerHTML = featured.map((p, i) => productCardHTML(p, i)).join('');
 }
 
@@ -148,6 +171,7 @@ async function renderShop(filter = '') {
     return;
   }
   if (empty) empty.style.display = 'none';
+  _productCache = products;
   grid.innerHTML = products.map((p, i) => productCardHTML(p, i)).join('');
 }
 

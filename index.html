@@ -45,7 +45,7 @@
         <span>Premium Coffins &amp; Burial Solutions</span>
       </div>
     </div>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a id="nav-home"         class="active" onclick="showPage('home')">Home</a></li>
       <li><a id="nav-shop"                        onclick="showPage('shop')">Collections</a></li>
       <li><a id="nav-services"                    onclick="showPage('services')">Services</a></li>
@@ -57,8 +57,21 @@
       <button class="cart-btn" onclick="openCart()">
         Cart &nbsp;<span class="cart-count" id="cart-count">0</span>
       </button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a onclick="navGo('home')">Home</a>
+    <a onclick="navGo('shop')">Collections</a>
+    <a onclick="navGo('services')">Services</a>
+    <a onclick="navGo('about')">About</a>
+    <a onclick="navGo('testimonials')">Testimonials</a>
+    <a onclick="navGo('contact')">Contact</a>
+    <a class="mobile-menu-call" href="tel:+250788871345">Call 24/7 &mdash; +250 788 871 345</a>
+  </div>
 </div>
 
 <!-- ═════════════════════════════════════════════════════════
@@ -66,50 +79,39 @@
 ═════════════════════════════════════════════════════════ -->
 <div class="page active" id="page-home">
 
-  <!-- HERO -->
-  <section class="hero-modern">
-    <div class="hero-container">
-      <div class="hero-left">
-        <div class="hero-tagline">
-          <span class="tagline-dot"></span>
-          Dignity &middot; Compassion &middot; Excellence
-        </div>
-        <h1 class="hero-headline">
-          Every farewell<br>deserves<br>
-          <span class="animated-word-wrapper">
-            <span class="animated-word" id="animated-word">dignity</span>
-          </span>
-        </h1>
-        <p class="hero-description">
-          At Ajacque Funeral Services, every coffin is a final tribute — crafted with premium
-          timber, skilled hands, and deep compassion. We walk alongside you in this solemn
-          moment with care and understanding.
-        </p>
-        <div class="hero-buttons">
-          <button class="hero-btn-primary"   onclick="showPage('shop')">View Collections &rarr;</button>
-          <button class="hero-btn-secondary" onclick="showPage('contact')">Get in Touch</button>
-        </div>
+  <!-- COMPACT HERO -->
+  <section class="hero-compact">
+    <div class="hero-compact-inner">
+      <div class="hero-tagline">
+        <span class="tagline-dot"></span>
+        Dignity &middot; Compassion &middot; Excellence
       </div>
-      <div class="hero-right">
-        <div class="collage-container">
-          <div class="collage-column collage-column-left">
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&h=520&fit=crop" alt="Serene memorial garden"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=400&h=520&fit=crop" alt="Peaceful floral arrangement"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=520&fit=crop" alt="Tranquil nature scene"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&h=520&fit=crop" alt="Serene memorial garden"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=400&h=520&fit=crop" alt="Peaceful floral arrangement"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=520&fit=crop" alt="Tranquil nature scene"><div class="collage-card-overlay"></div></div>
-          </div>
-          <div class="collage-column collage-column-right">
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&h=520&fit=crop" alt="Candlelit memorial"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1494894194458-0174142560c0?w=400&h=520&fit=crop" alt="Gentle sunrise memorial"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1516571748831-5d81767b788d?w=400&h=520&fit=crop" alt="Peaceful garden setting"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&h=520&fit=crop" alt="Candlelit memorial"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1494894194458-0174142560c0?w=400&h=520&fit=crop" alt="Gentle sunrise memorial"><div class="collage-card-overlay"></div></div>
-            <div class="collage-card"><img src="https://images.unsplash.com/photo-1516571748831-5d81767b788d?w=400&h=520&fit=crop" alt="Peaceful garden setting"><div class="collage-card-overlay"></div></div>
-          </div>
-        </div>
+      <h1 class="hero-compact-headline">
+        Every farewell deserves
+        <span class="animated-word-wrapper"><span class="animated-word" id="animated-word">dignity</span></span>
+      </h1>
+      <p class="hero-compact-desc">
+        Premium coffins crafted with select timber, skilled hands, and deep compassion &mdash;
+        serving families across Kigali, available 24 / 7.
+      </p>
+      <div class="hero-buttons">
+        <a class="hero-btn-primary" href="tel:+250788871345">Call 24/7 &rarr;</a>
+        <button class="hero-btn-secondary" onclick="showPage('contact')">Get in Touch</button>
       </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS SHOWCASE (main focus) -->
+  <section class="home-showcase">
+    <div class="section-header">
+      <div>
+        <div class="section-label reveal">Our Collection</div>
+        <h2 class="section-title reveal">Premium Coffins &amp; Caskets</h2>
+      </div>
+      <span class="see-all-link reveal" onclick="showPage('shop')">Browse All &rarr;</span>
+    </div>
+    <div class="product-grid" id="featured-grid">
+      <!-- Rendered by JS -->
     </div>
   </section>
 
@@ -150,111 +152,6 @@
     </div>
   </section>
 
-  <!-- FEATURED COLLECTIONS -->
-  <section class="featured-section">
-    <div class="section-header">
-      <div>
-        <div class="section-label reveal">Our Collections</div>
-        <h2 class="section-title reveal">Featured Products</h2>
-      </div>
-      <span class="see-all-link reveal" onclick="showPage('shop')">View All Collections &rarr;</span>
-    </div>
-    <div class="featured-grid" id="featured-grid">
-      <!-- Rendered by JS -->
-    </div>
-  </section>
-
-  <!-- COMPANY STORY -->
-  <section class="story-section">
-    <div class="story-img-wrap reveal">
-      <img src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?w=600&h=700&fit=crop" alt="Artisan crafting a premium coffin">
-      <div class="story-img-frame"></div>
-    </div>
-    <div class="story-content">
-      <div class="section-label reveal">Our Story</div>
-      <h2 class="section-title reveal">Crafted with<br>Honesty &amp; Heart</h2>
-      <p class="reveal">Ajacque Funeral Services was founded with a singular purpose: to provide families in Rwanda with dignified, high-quality burial solutions during life's most vulnerable moments.</p>
-      <p class="reveal">Located on KG 14 Avenue in Kigali, we have served hundreds of families with professionalism, care, and an unwavering commitment to quality that is evident in every piece we produce.</p>
-      <p class="reveal">Our craftsmen bring generations of woodworking knowledge to each coffin — selecting the finest timber, applying meticulous joinery, and delivering a finished piece worthy of the life being honoured.</p>
-      <div class="story-signature reveal">
-        <p>Serving families with dignity and compassion</p>
-        <strong>Ajacque Funeral Services &mdash; Kigali, Rwanda</strong>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS PREVIEW -->
-  <section class="testi-section">
-    <div class="section-label reveal">What Families Say</div>
-    <h2 class="section-title reveal">Words of Gratitude</h2>
-    <div class="testi-grid">
-      <div class="testi-card reveal">
-        <div class="testi-text">The team at Ajacque was extraordinarily compassionate and professional. They guided us through every detail with patience and made an unbearable time more bearable.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">MK</div>
-          <div>
-            <div class="testi-name">Marie Kayitesi</div>
-            <div class="testi-loc">Kigali, Rwanda</div>
-          </div>
-        </div>
-      </div>
-      <div class="testi-card reveal reveal-delay-1">
-        <div class="testi-text">The quality of the coffin surpassed our expectations. Beautiful craftsmanship, delivered on time with such care and respect. Our family is truly grateful.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">JM</div>
-          <div>
-            <div class="testi-name">Jean Mugisha</div>
-            <div class="testi-loc">Nyarugenge, Kigali</div>
-          </div>
-        </div>
-      </div>
-      <div class="testi-card reveal reveal-delay-2">
-        <div class="testi-text">When we called at midnight in crisis, they answered and helped us immediately. The professionalism and human warmth they showed was extraordinary.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">GN</div>
-          <div>
-            <div class="testi-name">Grace Niyonsenga</div>
-            <div class="testi-loc">Gasabo District</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:44px;">
-      <button class="hero-btn-secondary" style="background:transparent;color:var(--ink);border-color:var(--cream3);" onclick="showPage('testimonials')">Read All Testimonials &rarr;</button>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="process-section">
-    <div style="text-align:center; max-width:600px; margin:0 auto;">
-      <div class="section-label reveal">How It Works</div>
-      <h2 class="section-title reveal">Simple. Compassionate.<br>Dignified.</h2>
-      <p class="section-sub reveal" style="margin:0 auto 0;">From your first call to final delivery, we handle every step with care.</p>
-    </div>
-    <div class="process-steps">
-      <div class="process-step reveal">
-        <div class="step-num">1</div>
-        <h4>Reach Out</h4>
-        <p>Contact us by phone, WhatsApp, or visit our showroom on KG 14 Avenue, Kigali. We are available 24 hours a day.</p>
-      </div>
-      <div class="process-step reveal reveal-delay-1">
-        <div class="step-num">2</div>
-        <h4>Choose Together</h4>
-        <p>Browse our collections with guidance from our team. We help you select the right style, material, and specification.</p>
-      </div>
-      <div class="process-step reveal reveal-delay-2">
-        <div class="step-num">3</div>
-        <h4>We Prepare</h4>
-        <p>Our craftsmen carefully prepare and quality-check your chosen coffin to ensure it meets our premium standards.</p>
-      </div>
-      <div class="process-step reveal reveal-delay-3">
-        <div class="step-num">4</div>
-        <h4>Delivered with Care</h4>
-        <p>We deliver to your location with discretion, respect, and punctuality — ensuring everything is exactly right.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- EMERGENCY STRIP -->
   <div class="emergency-strip">
     <div>
@@ -266,15 +163,6 @@
     <a href="tel:+250788871345" class="emg-btn">Call Now</a>
   </div>
 
-  <!-- CTA STRIP -->
-  <div class="cta-strip">
-    <h2>Ready to Honour a Cherished Life?</h2>
-    <p>Explore our full collection of premium coffins, or reach out and we will guide you with compassion and care.</p>
-    <div class="cta-strip-btns">
-      <button class="cta-btn-white" onclick="showPage('shop')">Browse Collections</button>
-      <button class="cta-btn-outline" onclick="showPage('contact')">Contact Us</button>
-    </div>
-  </div>
 
   <!-- FOOTER -->
   <footer class="main-footer">
@@ -319,7 +207,6 @@
       <div class="footer-bottom-links">
         <a onclick="showPage('terms')">Terms of Service</a>
         <a onclick="showPage('privacy')">Privacy Policy</a>
-        <a onclick="showPage('dbdocs')">DB Docs</a>
         <a href="admin.html" target="_blank">Admin</a>
       </div>
     </div>
