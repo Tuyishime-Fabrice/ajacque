@@ -32,12 +32,8 @@
     <p class="login-sub">Sign in to manage your catalogue</p>
 
     <div class="login-field">
-      <label>Username</label>
-      <input type="text" id="login-user" placeholder="Enter username" autocomplete="off">
-    </div>
-    <div class="login-field">
       <label>Password</label>
-      <input type="password" id="login-pass" placeholder="Enter password" autocomplete="off">
+      <input type="password" id="login-pass" placeholder="Enter admin password" autocomplete="current-password">
     </div>
 
     <span class="login-err" id="login-err"></span>
@@ -122,6 +118,15 @@
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
         <span class="nav-label">Messages</span>
+      </button>
+
+      <button class="nav-item" onclick="showPanel('gallery',this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span class="nav-label">Gallery</span>
       </button>
     </nav>
 
@@ -343,6 +348,40 @@
       <div class="msg-list" id="msg-list"></div>
     </div>
 
+    <!-- ── PANEL: GALLERY ── -->
+    <div class="panel" id="panel-gallery">
+      <div class="panel-header">
+        <h2>Product Gallery</h2>
+        <p>Upload up to 10 photos at once. These appear in the Gallery section on the Collections page — pictures only, no product details needed.</p>
+      </div>
+
+      <div class="gallery-upload-card">
+        <div class="gallery-dropzone" id="gallery-dropzone"
+             ondragover="galleryDragOver(event)" ondragleave="galleryDragLeave(event)" ondrop="galleryDrop(event)"
+             onclick="document.getElementById('gallery-input').click()">
+          <input type="file" id="gallery-input" accept="image/*" multiple style="display:none" onchange="handleGalleryFiles(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span class="gd-title">Click or drop images here</span>
+          <span class="gd-sub">Select up to 10 photos · JPG, PNG, WEBP</span>
+        </div>
+
+        <div class="gallery-previews" id="gallery-previews"></div>
+
+        <div class="gallery-upload-actions" id="gallery-upload-actions" style="display:none;">
+          <button class="btn-save" id="gallery-upload-btn" onclick="uploadGalleryImages()">Upload Images</button>
+          <button class="btn-reset" onclick="clearGallerySelection()">Clear Selection</button>
+        </div>
+      </div>
+
+      <div class="panel-header" style="margin-top:36px;">
+        <h2 style="font-size:20px;">Current Gallery</h2>
+      </div>
+      <div class="prod-list-controls">
+        <span class="prod-count-badge" id="gallery-count">0 images</span>
+      </div>
+      <div class="gallery-manage-grid" id="gallery-manage-grid"></div>
+    </div>
+
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
@@ -372,26 +411,28 @@
 ════════════════════════════════════════ */
 const SUPABASE_URL  = 'https://fxcwywpapoqbanzyubqo.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4Y3d5d3BhcG9xYmFuenl1YnFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MjgyODUsImV4cCI6MjA5NDQwNDI4NX0.3DooQKXD0epe-B5dSM_1Jm18Gzrd-UgzyGiEUo4lw54';
-const SUPABASE_SVC  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4Y3d5d3BhcG9xYmFuenl1YnFvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODgyODI4NSwiZXhwIjoyMDk0NDA0Mjg1fQ.kKcNkwApAi2dhy2fKzhrNs2PjnGWHQK5vPTvpOC-PN0';
+
+// All privileged writes go through this server-side function.
+// The Supabase service key lives ONLY on the server (Netlify env var) — never here.
+const ADMIN_API = '/.netlify/functions/admin-api';
+let   ADMIN_PW  = sessionStorage.getItem('ajacque_admin_pw') || '';
 
 /* ════════════════════════════════════════
    CONSTANTS
 ════════════════════════════════════════ */
 const MESSAGES_KEY = 'ajacque_messages'; // contact messages still in localStorage
-const AUTH_KEY     = 'ajacque_admin_auth';
-const CREDS        = { user:'admin', pass:'ajacque2024' };
 const BUCKET       = 'product-images'; // Supabase Storage bucket name
 
 /* ════════════════════════════════════════
    SUPABASE HELPERS
 ════════════════════════════════════════ */
-async function sbFetch(path, opts = {}, useServiceKey = false) {
-  const key = useServiceKey ? SUPABASE_SVC : SUPABASE_ANON;
+async function sbFetch(path, opts = {}) {
+  // Anon key = READ-ONLY public access. All writes go through adminApi().
   const res = await fetch(SUPABASE_URL + path, {
     ...opts,
     headers: {
-      'apikey':        key,
-      'Authorization': 'Bearer ' + key,
+      'apikey':        SUPABASE_ANON,
+      'Authorization': 'Bearer ' + SUPABASE_ANON,
       'Content-Type':  'application/json',
       ...(opts.headers || {}),
     },
@@ -399,53 +440,212 @@ async function sbFetch(path, opts = {}, useServiceKey = false) {
   return res;
 }
 
-// Upload one image file → returns public URL string or null
-async function uploadImage(file, productName, slot) {
-  const ext  = file.name.split('.').pop();
-  const path = `${Date.now()}_${slot}.${ext}`;
-  const res  = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,
+// Call the server-side admin function. The admin password gates every write.
+async function adminApi(action, payload = {}) {
+  try {
+    const res = await fetch(ADMIN_API, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ password: ADMIN_PW, action, ...payload }),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  } catch (e) {
+    return { ok: false, status: 0, data: { error: String(e) } };
+  }
+}
+
+// Upload a file to Storage using a one-time signed URL issued by the server.
+// The service key never reaches the browser; the token authorises this one upload.
+async function uploadFile(file, path, bucket = BUCKET) {
+  const sign = await adminApi('sign-upload', { path, bucket });
+  if (!sign.ok || !sign.data.token) {
+    console.error('Could not sign upload', sign.data);
+    return null;
+  }
+  const up = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/upload/sign/${bucket}/${path}?token=${sign.data.token}`,
     {
-      method: 'POST',
+      method: 'PUT',
       headers: {
-        'apikey':        SUPABASE_SVC,
-        'Authorization': 'Bearer ' + SUPABASE_SVC,
+        'apikey':        SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
         'Content-Type':  file.type,
-        'x-upsert':      'false',
+        'x-upsert':      'true',
       },
       body: file,
     }
   );
-  if (!res.ok) {
-    console.error('Image upload failed', await res.text());
+  if (!up.ok) {
+    console.error('Image upload failed', await up.text());
     return null;
   }
-  // Build public URL
-  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+  return sign.data.publicUrl;
+}
+
+// Upload one product image → returns public URL string or null
+async function uploadImage(file, productName, slot) {
+  const ext  = (file.name.split('.').pop() || 'jpg');
+  const path = `${Date.now()}_${slot}.${ext}`;
+  return uploadFile(file, path);
+}
+
+/* ════════════════════════════════════════
+   GALLERY (separate Supabase 'gallery' table)
+════════════════════════════════════════ */
+const MAX_GALLERY = 10;
+let galleryFiles = []; // raw File objects pending upload
+
+function handleGalleryFiles(e) {
+  addGalleryFiles(e.target.files);
+  e.target.value = ''; // allow re-selecting same files
+}
+function galleryDragOver(e){ e.preventDefault(); document.getElementById('gallery-dropzone').classList.add('drag-over'); }
+function galleryDragLeave(e){ e.preventDefault(); document.getElementById('gallery-dropzone').classList.remove('drag-over'); }
+function galleryDrop(e){
+  e.preventDefault();
+  document.getElementById('gallery-dropzone').classList.remove('drag-over');
+  addGalleryFiles(e.dataTransfer.files);
+}
+
+function addGalleryFiles(fileList) {
+  const incoming = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+  for (const f of incoming) {
+    if (galleryFiles.length >= MAX_GALLERY) {
+      showToast(`You can upload up to ${MAX_GALLERY} images at a time.`, 'info');
+      break;
+    }
+    galleryFiles.push(f);
+  }
+  renderGalleryPreviews();
+}
+
+function renderGalleryPreviews() {
+  const wrap    = document.getElementById('gallery-previews');
+  const actions = document.getElementById('gallery-upload-actions');
+  if (!galleryFiles.length) {
+    wrap.innerHTML = '';
+    actions.style.display = 'none';
+    return;
+  }
+  actions.style.display = 'flex';
+  wrap.innerHTML = galleryFiles.map((f, i) => `
+    <div class="gp-thumb">
+      <img src="${URL.createObjectURL(f)}" alt="">
+      <button class="gp-remove" onclick="removeGalleryFile(${i})" title="Remove">✕</button>
+    </div>`).join('');
+  document.getElementById('gallery-upload-btn').textContent =
+    `Upload ${galleryFiles.length} Image${galleryFiles.length !== 1 ? 's' : ''}`;
+}
+
+function removeGalleryFile(i) {
+  galleryFiles.splice(i, 1);
+  renderGalleryPreviews();
+}
+function clearGallerySelection() {
+  galleryFiles = [];
+  renderGalleryPreviews();
+}
+
+// Upload a single gallery image to Storage → public URL or null
+async function uploadGalleryImage(file, idx) {
+  const ext  = (file.name.split('.').pop() || 'jpg');
+  const path = `gallery/${Date.now()}_${idx}.${ext}`;
+  return uploadFile(file, path);
+}
+
+async function uploadGalleryImages() {
+  if (!galleryFiles.length) return;
+  const btn = document.getElementById('gallery-upload-btn');
+  btn.disabled = true;
+
+  let ok = 0;
+  for (let i = 0; i < galleryFiles.length; i++) {
+    btn.textContent = `Uploading ${i + 1} / ${galleryFiles.length}…`;
+    const url = await uploadGalleryImage(galleryFiles[i], i);
+    if (!url) continue;
+    const res = await adminApi('insert', { table: 'gallery', row: { image_url: url } });
+    if (res.ok) ok++;
+  }
+
+  btn.disabled = false;
+  clearGallerySelection();
+  showToast(`${ok} image${ok !== 1 ? 's' : ''} added to the gallery.`, ok ? 'success' : 'error');
+  renderGalleryList();
+}
+
+async function renderGalleryList() {
+  const grid    = document.getElementById('gallery-manage-grid');
+  const countEl = document.getElementById('gallery-count');
+  if (!grid) return;
+  grid.innerHTML = `<div class="pl-empty"><p>Loading…</p></div>`;
+
+  const res  = await sbFetch('/rest/v1/gallery?select=*&order=created_at.desc', { method:'GET' });
+  let imgs   = res.ok ? await res.json() : [];
+  imgs       = Array.isArray(imgs) ? imgs : [];
+
+  countEl.textContent = imgs.length + (imgs.length === 1 ? ' image' : ' images');
+
+  if (!imgs.length) {
+    grid.innerHTML = `<div class="pl-empty"><p>No gallery images yet.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = imgs.map(img => `
+    <div class="gm-item">
+      <img src="${img.image_url}" alt="">
+      <button class="gm-del" onclick="confirmDeleteGalleryImg('${img.id}')" title="Delete">✕</button>
+    </div>`).join('');
+}
+
+function confirmDeleteGalleryImg(id) {
+  openConfirm(
+    'Delete Image',
+    'Remove this image from the gallery? This cannot be undone.',
+    async () => {
+      const res = await adminApi('delete', { table: 'gallery', id });
+      if (res.ok) { showToast('Image removed.', 'info'); renderGalleryList(); }
+      else        { showToast('Delete failed. Try again.', 'error'); }
+    }
+  );
 }
 
 /* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
-  if (sessionStorage.getItem(AUTH_KEY) === 'true') showDashboard();
+  if (ADMIN_PW) showDashboard();
   startClock();
 });
 
 /* ════════════════════════════════════════
-   AUTH
+   AUTH  (password verified server-side)
 ════════════════════════════════════════ */
-function doLogin() {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
+async function doLogin() {
+  const p   = document.getElementById('login-pass').value;
   const err = document.getElementById('login-err');
-  if (u === CREDS.user && p === CREDS.pass) {
-    sessionStorage.setItem(AUTH_KEY, 'true');
-    err.textContent = '';
+  const btn = document.querySelector('.login-btn');
+  err.textContent = '';
+
+  if (!p) { err.textContent = 'Please enter your password.'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  ADMIN_PW = p;
+  const r = await adminApi('login');
+  btn.disabled = false;
+  btn.textContent = 'Sign In';
+
+  if (r.ok) {
+    sessionStorage.setItem('ajacque_admin_pw', p);
     showDashboard();
   } else {
-    err.textContent = 'Invalid username or password.';
+    ADMIN_PW = '';
+    sessionStorage.removeItem('ajacque_admin_pw');
     document.getElementById('login-pass').value = '';
+    err.textContent = (r.status === 401)
+      ? 'Incorrect password.'
+      : (r.data.error || 'Login failed. Please try again.');
   }
 }
 document.addEventListener('keydown', e => {
@@ -460,7 +660,8 @@ function showDashboard() {
 
 function confirmLogout() {
   openConfirm('Sign Out', 'Are you sure you want to sign out?', () => {
-    sessionStorage.removeItem(AUTH_KEY);
+    ADMIN_PW = '';
+    sessionStorage.removeItem('ajacque_admin_pw');
     location.reload();
   });
 }
@@ -473,6 +674,7 @@ const panelTitles = {
   'add-product':  'Add Product',
   'all-products': 'All Products',
   'messages':     'Enquiries',
+  'gallery':      'Gallery',
 };
 
 function showPanel(name, btn) {
@@ -483,6 +685,7 @@ function showPanel(name, btn) {
   document.getElementById('topbar-title').textContent = panelTitles[name] || name;
   if (name === 'all-products') renderProductList();
   if (name === 'messages')     renderMessages();
+  if (name === 'gallery')      renderGalleryList();
   if (name === 'overview')     updateCounters();
   document.getElementById('sidebar').classList.remove('open');
 }
@@ -618,18 +821,13 @@ async function saveProduct() {
     images:      imageUrls,  // stored as a JSON array column in Supabase
   };
 
-  const res = await sbFetch('/rest/v1/products', {
-    method:  'POST',
-    headers: { 'Prefer': 'return=representation' },
-    body:    JSON.stringify(product),
-  });
+  const res = await adminApi('insert', { table: 'products', row: product });
 
   saveBtn.textContent = 'Save Product';
   saveBtn.disabled = false;
 
   if (!res.ok) {
-    const txt = await res.text();
-    showFieldErr(errEl, 'Save failed: ' + txt);
+    showFieldErr(errEl, 'Save failed: ' + (res.data.error || 'please try again'));
     return;
   }
 
@@ -702,7 +900,7 @@ async function confirmDelete(id, name) {
     'Delete Product',
     `Delete "${name}"? This removes it from the website immediately.`,
     async () => {
-      const res = await sbFetch(`/rest/v1/products?id=eq.${id}`, { method:'DELETE' });
+      const res = await adminApi('delete', { table: 'products', id });
       if (res.ok) {
         showToast('Product deleted.','info');
         renderProductList();

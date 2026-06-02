@@ -35,6 +35,12 @@ async function getProducts() {
   return Array.isArray(rows) ? rows : [];
 }
 
+// Fetch gallery images from Supabase 'gallery' table, newest first
+async function getGallery() {
+  const rows = await sbFetch('/rest/v1/gallery?select=*&order=created_at.desc');
+  return Array.isArray(rows) ? rows : [];
+}
+
 // Keep MSG_KEY for contact messages (still localStorage for now)
 const MSG_KEY = 'ajacque_messages';
 
@@ -74,7 +80,7 @@ async function showPage(id) {
   if (navEl) navEl.classList.add('active');
 
   // Render content on demand
-  if (id === 'shop')   await renderShop();
+  if (id === 'shop') { await renderShop(); await renderGallery(); }
   if (id === 'home')   await renderFeatured();
   triggerReveal();
 }
@@ -173,6 +179,49 @@ async function renderShop(filter = '') {
   if (empty) empty.style.display = 'none';
   _productCache = products;
   grid.innerHTML = products.map((p, i) => productCardHTML(p, i)).join('');
+}
+
+// ── Product Gallery (Collections page) ───────────────────
+async function renderGallery() {
+  const grid  = document.getElementById('gallery-grid');
+  const empty = document.getElementById('gallery-empty');
+  if (!grid) return;
+
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--gray);">Loading gallery…</div>`;
+
+  const images = await getGallery();
+
+  if (!images.length) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  grid.innerHTML = images.map(img => {
+    const src = img.image_url || '';
+    return `
+      <div class="gallery-item" onclick="openGalleryImg('${src.replace(/'/g,"\\'")}')">
+        <img src="${src}" alt="Ajacque product" loading="lazy">
+      </div>`;
+  }).join('');
+}
+
+function openGalleryImg(src) {
+  const box = document.getElementById('gallery-lightbox');
+  const img = document.getElementById('gallery-lightbox-img');
+  if (!box || !img) return;
+  img.src = src;
+  box.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeGalleryImg(e) {
+  // Close when clicking backdrop or the close button (no arg)
+  if (e && e.target && e.target.tagName === 'IMG') return;
+  const box = document.getElementById('gallery-lightbox');
+  if (box) box.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 // ── Product Card HTML ────────────────────────────────────

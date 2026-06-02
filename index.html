@@ -243,6 +243,17 @@
     </div>
   </div>
 
+  <!-- PRODUCT IMAGE GALLERY (images only — from Supabase 'gallery' table) -->
+  <div class="gallery-section">
+    <div class="section-label">Gallery</div>
+    <h2 class="section-title">More From Our Workshop</h2>
+    <p class="gallery-intro">A closer look at the craftsmanship behind our collection.</p>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="gallery-empty" id="gallery-empty">
+      <p>Gallery images coming soon.</p>
+    </div>
+  </div>
+
   <footer class="main-footer">
     <div class="footer-bottom" style="padding-top:0; border:none;">
       <p style="color:rgba(245,240,232,.3); font-size:12px;">&copy; <span class="yr"></span> Ajacque Funeral Services. All rights reserved.</p>
@@ -1012,6 +1023,14 @@
       <button class="checkout-btn" onclick="cartCheckout()">Enquire via WhatsApp</button>
     </div>
   </div>
+</div>
+
+<!-- ═════════════════════════════════════════════════════════
+     GALLERY LIGHTBOX
+═════════════════════════════════════════════════════════ -->
+<div class="gallery-lightbox" id="gallery-lightbox" onclick="closeGalleryImg(event)">
+  <button class="gallery-lightbox-close" onclick="closeGalleryImg()">&#10005;</button>
+  <img id="gallery-lightbox-img" src="" alt="Gallery image">
 </div>
 
 <script src="main.js"></script>
