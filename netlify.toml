@@ -1,11 +1,3 @@
-# Ajacque Funeral Services — Netlify configuration
-# Static site served from the repo root, with serverless functions
-# in netlify/functions. The admin API function holds the Supabase
-# service key server-side.
-
 [build]
   publish = "."
   functions = "netlify/functions"
-
-[functions]
-  node_bundler = "esbuild"
