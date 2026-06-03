@@ -64,9 +64,14 @@ exports.handler = async (event) => {
         const r = await fetch(`${SUPABASE_URL}/storage/v1/object/upload/sign/${bucket}/${path}`, {
           method: 'POST',
           headers: svcHeaders,
+          body: JSON.stringify({}),
         });
         const data = await r.json().catch(() => ({}));
-        if (!r.ok) return json(r.status, { error: data.message || 'Could not sign upload' });
+        if (!r.ok) {
+          return json(r.status, {
+            error: data.message || data.error || `Could not sign upload (status ${r.status})`,
+          });
+        }
 
         return json(200, {
           token: data.token,
